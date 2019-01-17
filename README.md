@@ -29,4 +29,6 @@ You will need some a HTTP server on the file server. Edit the constants in `zfil
 
 The basic use case just requires a filename as the first parameter, see the `--help` option for more information. If you installed the Dolphin service you can just right click on a file an select the upload option, the link will be copied to your clipboard.
 
+### Password protection
+Add a password to your private key if this is desired.
 
