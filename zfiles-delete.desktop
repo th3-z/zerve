@@ -1,0 +1,11 @@
+[Desktop Entry]
+Actions=ZFDelete
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/allfiles
+Type=Service
+X-KDE-Priority=TopLevel
+
+[Desktop Action ZFDelete]
+Exec=/home/the_z/bin/zfiles -d %f
+Name=Delete from files.th3-z.xyz
+ 

@@ -1,0 +1,78 @@
+#!/usr/bin/python3
+
+import sys
+import argparse
+
+from os import system
+from os.path import isfile, exists, dirname, splitext, basename
+
+import hashlib
+import pyperclip
+
+USERNAME = "the_z"
+IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
+
+REMOTE_HOST = "files.th3-z.xyz"
+TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
+TARGET_LOCATION = "uploads/"
+
+TARGET_PATH = TARGET_ROOT + TARGET_LOCATION
+SCP_FLAGS = "-Cq -i {}".format(IDENTITY)
+SSH_FLAGS = "-q -i {}".format(IDENTITY)
+
+def md5sum(filename):
+    hashalg = hashlib.md5()
+
+    with open(filename, "rb") as f:
+        for chunk in iter(lambda: f.read(4096), b""):
+            hashalg.update(chunk)
+
+    return hashalg.hexdigest()
+
+def main():
+    arg_parser = argparse.ArgumentParser()
+    
+    arg_parser.add_argument("input_file", \
+        help="Specify a file to upload")
+    arg_parser.add_argument("-p", "--preserve_name", \
+        help="Preserve filename, overwrites existing files", \
+        action="store_true")
+    arg_parser.add_argument("-d", "--delete", \
+        help="Delete input file from remote, can be used with -o and -t", \
+        action="store_true")
+
+    args = arg_parser.parse_args()
+    file_path = args.input_file
+    preserve_name = args.preserve_name
+    delete = args.delete
+
+    if not exists(file_path) or not isfile(file_path):
+        print("Err: file not found!")
+
+    file_name, file_ext = splitext(basename(file_path))
+
+    if preserve_name:
+        file_remote = file_name + file_ext
+    else:
+        file_remote = md5sum(file_path) + file_ext
+    
+    if not delete:
+        system("scp {} {} {}@{}:{}"
+            .format(SCP_FLAGS, 
+                    file_path, 
+                    USERNAME, 
+                    REMOTE_HOST, 
+                    TARGET_PATH+file_remote)
+        )
+        print("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
+        pyperclip.copy("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
+    else:
+        system("ssh {} {}@{} \"rm {} &> /dev/null\""
+            .format(SSH_FLAGS, 
+                    USERNAME, 
+                    REMOTE_HOST, 
+                    TARGET_PATH+file_remote)
+        )
+
+if __name__ == "__main__":
+    main()

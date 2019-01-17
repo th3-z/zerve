@@ -1,0 +1,10 @@
+[Desktop Entry]
+Actions=ZFUpload
+ServiceTypes=KonqPopupMenu/Plugin
+MimeType=all/allfiles
+Type=Service
+X-KDE-Priority=TopLevel
+
+[Desktop Action ZFUpload]
+Exec=/home/the_z/bin/zfiles %f
+Name=Upload to files.th3-z.xyz
