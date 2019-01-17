@@ -20,6 +20,7 @@ I've provided context menu entries for Dolphin, `zfile-upload.desktop` and `zfil
 
 ## Configuration and usage
 You will need some a HTTP server on the file server. Edit the constants in `zfiles` to match your configuration:
+
 * `REMOTE_HOST` - Domain name of remote server.
 * `TARGET_ROOT` - Root directory of your HTTP server on `REMOTE_HOST`.
 * `TARGET_LOCATION` - Relative path from `TARGET_ROOT` in which to store uploads.
