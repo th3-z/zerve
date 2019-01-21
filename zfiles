@@ -40,11 +40,15 @@ def main():
     arg_parser.add_argument("-d", "--delete", \
         help="Delete input file from remote, can be used with -o and -t", \
         action="store_true")
+    arg_parser.add_argument("-v", "--verbose", \
+        help="Increase output verbosity", \
+        action="store_true")
 
     args = arg_parser.parse_args()
     file_path = args.input_file
     preserve_name = args.preserve_name
     delete = args.delete
+    verbose = args.verbose
 
     if not exists(file_path) or not isfile(file_path):
         print("Err: file not found!")
@@ -57,13 +61,16 @@ def main():
         file_remote = md5sum(file_path) + file_ext
     
     if not delete:
-        system("scp {} {} {}@{}:{}"
-            .format(SCP_FLAGS, 
-                    file_path, 
-                    USERNAME, 
-                    REMOTE_HOST, 
-                    TARGET_PATH+file_remote)
-        )
+        scp_command = "scp {} \"{}\" {}@{}:{}".format(
+            SCP_FLAGS,
+            file_path, 
+            USERNAME, 
+            REMOTE_HOST, 
+            TARGET_PATH+file_remote)
+        if verbose:
+            print(scp_command)
+        system(scp_command)
+
         print("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
         pyperclip.copy("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
     else:
