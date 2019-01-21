@@ -61,12 +61,14 @@ def main():
         file_remote = md5sum(file_path) + file_ext
     
     if not delete:
-        scp_command = "scp {} \"{}\" {}@{}:{}".format(
-            SCP_FLAGS,
-            file_path, 
-            USERNAME, 
-            REMOTE_HOST, 
-            TARGET_PATH+file_remote)
+        scp_command = "scp {} \"{}\" {}@{}:{}"
+            .format(
+                SCP_FLAGS,
+                file_path, 
+                USERNAME, 
+                REMOTE_HOST, 
+                TARGET_PATH+file_remote
+        )
         if verbose:
             print(scp_command)
         system(scp_command)
