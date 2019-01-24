@@ -14,9 +14,9 @@ IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
 
 REMOTE_HOST = "files.th3-z.xyz"
 TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
-TARGET_LOCATION = "uploads/"
+TARGET_LOCATION_TRANSIENT = "transient/"
+TARGET_LOCATION_STANDING = "standing/"
 
-TARGET_PATH = TARGET_ROOT + TARGET_LOCATION
 SCP_FLAGS = "-Cq -i {}".format(IDENTITY)
 SSH_FLAGS = "-q -i {}".format(IDENTITY)
 
@@ -43,12 +43,23 @@ def main():
     arg_parser.add_argument("-v", "--verbose", \
         help="Increase output verbosity", \
         action="store_true")
+    arg_parser.add_argument("-s", "--standing", \
+        help="Upload file to alternative, persistant, location", \
+        action="store_true")
 
     args = arg_parser.parse_args()
-    file_path = args.input_file
-    preserve_name = args.preserve_name
+
     delete = args.delete
     verbose = args.verbose
+    standing = args.standing
+    file_path = args.input_file
+    preserve_name = args.preserve_name
+
+    if standing:
+        target_location = TARGET_LOCATION_STANDING
+    else:
+        target_location = TARGET_LOCATION_TRANSIENT
+    target_path = TARGET_ROOT + target_location
 
     if not exists(file_path) or not isfile(file_path):
         print("Err: file not found!")
@@ -61,26 +72,25 @@ def main():
         file_remote = md5sum(file_path) + file_ext
     
     if not delete:
-        scp_command = "scp {} \"{}\" {}@{}:{}"
-            .format(
+        scp_command = "scp {} \"{}\" {}@{}:{}".format(
                 SCP_FLAGS,
                 file_path, 
                 USERNAME, 
                 REMOTE_HOST, 
-                TARGET_PATH+file_remote
+                target_path+file_remote
         )
         if verbose:
             print(scp_command)
         system(scp_command)
 
-        print("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
-        pyperclip.copy("https://{}/{}{}".format(REMOTE_HOST, TARGET_LOCATION, file_remote))
+        print("https://{}/{}{}".format(REMOTE_HOST, target_location, file_remote))
+        pyperclip.copy("https://{}/{}{}".format(REMOTE_HOST, target_location, file_remote))
     else:
         system("ssh {} {}@{} \"rm {} &> /dev/null\""
             .format(SSH_FLAGS, 
                     USERNAME, 
                     REMOTE_HOST, 
-                    TARGET_PATH+file_remote)
+                    target_path+file_remote)
         )
 
 if __name__ == "__main__":

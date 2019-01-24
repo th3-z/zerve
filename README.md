@@ -23,7 +23,8 @@ You will need some a HTTP server on the file server. Edit the constants in `zfil
 
 * `REMOTE_HOST` - Domain name of remote server.
 * `TARGET_ROOT` - Root directory of your HTTP server on `REMOTE_HOST`.
-* `TARGET_LOCATION` - Relative path from `TARGET_ROOT` in which to store uploads.
+* `TARGET_LOCATION_TRANSIENT` - Relative path from `TARGET_ROOT` in which to store temporary uploads.
+* `TARGET_LOCATION_STANDING` - Relative path from `TARGET_ROOT` in which to store permanent uploads.
 * `USERNAME` - User with SSH access and write permissions to `TARGET_ROOT`/`TARGET_LOCATION`.
 * `IDENTITY` - Location of SSH private key on local machine.
 
