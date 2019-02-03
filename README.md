@@ -13,10 +13,10 @@ A primitive puush clone over SSH. Upload a file to some remote server with `scp`
 Copy `zerve` to somewhere in your `PATH` on the local machine, install any HTTP server and SSH on the remote host.
 
 ### Dolphin file manager
-I've provided context menu entries for KDE's Dolphin, `zerve-upload.desktop` and `zerve-delete.desktop`. These can be copied to `~/local/share/kservices5/ServiceMenu/` to add them to your context menu. 
+I've provided a context menu entry for KDE's Dolphin, `zerve-upload.desktop`. This can be copied to `~/local/share/kservices5/ServiceMenu/` to add it to your context menu. 
 
 ### Automatic deletion
-`clean` is a script that can be ran to delete uploads after some number of days. By default it looks in the `uploads` directory and deletes after three days, modification is trivial. Add this to your server's crontab to automate deletion.
+`clean` is a script that can be ran to delete uploads after some number of days. By default it looks in the `transient` directory and deletes after three days, modification is trivial. Add this to your server's crontab to automate deletion. The `--standing` flag prevents deletion by this script.
 
 ## Configuration and usage
 You will need some a HTTP server on the file server. Edit the constants in `zerve` to match your configuration:
@@ -28,7 +28,7 @@ You will need some a HTTP server on the file server. Edit the constants in `zerv
 * `USERNAME` - User with SSH access and write permissions to `TARGET_ROOT`/`TARGET_LOCATION`.
 * `IDENTITY` - Location of SSH private key on local machine.
 
-The basic use case just requires a filename as the first parameter, see the `--help` option for more information. If you installed the Dolphin service you can just right click on a file an select the upload option, the link will be copied to your clipboard.
+The basic use case just requires a filename as the first parameter, see the `--help` option for more information. If you installed the Dolphin service you can just right click on a file an select the upload option, the link will be copied to your clipboard if pyperclip can find one.
 
 ### Password protection
 Add a password to your private key if this is desired.
