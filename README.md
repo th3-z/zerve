@@ -13,7 +13,7 @@ A primitive puush clone over SSH. Upload a file to some remote server with `scp`
 Copy `zerve` to somewhere in your `PATH` on the local machine, install any HTTP server and SSH on the remote host.
 
 ### Dolphin file manager
-I've provided a context menu entry for KDE's Dolphin, `zerve-upload.desktop`. This can be copied to `~/local/share/kservices5/ServiceMenu/` to add it to your context menu. 
+I've provided a context menu entry for KDE's Dolphin, `zerve-upload.desktop`. This can be copied to `~/.local/share/kservices5/ServiceMenu/` to add it to your context menu. 
 
 ### Automatic deletion
 `clean` is a script that can be ran to delete uploads after some number of days. By default it looks in the `transient` directory and deletes after three days, modification is trivial. Add this to your server's crontab to automate deletion. The `--standing` flag prevents deletion by this script.
