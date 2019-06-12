@@ -1,34 +1,31 @@
 # Zerve
 
 ## Description
-
-A primitive puush clone over SSH. Upload a file to some remote server with `scp` and copy the resulting URL to the clipboard.
-
+A primitive but functional puush clone over SSH. Upload a file to some remote 
+server with `scp` and copy the resulting URL to the clipboard.
 
 ## Requirements
-* Python3
-* Pyperclip - `pip3 install pyperclip`
+* python3
+* python3-pip
+* make
 
 ## Installation
-Copy `zerve` to somewhere in your `PATH` on the local machine, install any HTTP server and SSH on the remote host.
+Prepare a HTTP server on your host and configure the options at the top of 
+`zerve` before installation.
+`sudo make install` Installs the command line client utility.
+`sudo make install-kde` Installs the command line client utility and adds an 
+upload option to contextual menus for KDE users.
 
-### Dolphin file manager
-I've provided a context menu entry for KDE's Dolphin, `zerve-upload.desktop`. This can be copied to `~/.local/share/kservices5/ServiceMenu/` to add it to your context menu. 
+`clean` is a script that can be ran to delete uploads after some number of 
+days. By default it looks in the `transient` directory and deletes after three 
+days, modify this file to delete files in the relevant path for your server. 
+Add this to your server's crontab to automate deletion. The `--standing` flag 
+prevents deletion by this script.
 
-### Automatic deletion
-`clean` is a script that can be ran to delete uploads after some number of days. By default it looks in the `transient` directory and deletes after three days, modification is trivial. Add this to your server's crontab to automate deletion. The `--standing` flag prevents deletion by this script.
-
-## Configuration and usage
-You will need some a HTTP server on the file server. Edit the constants in `zerve` to match your configuration:
-
-* `REMOTE_HOST` - Domain name of remote server.
-* `TARGET_ROOT` - Root directory of your HTTP server on `REMOTE_HOST`.
-* `TARGET_LOCATION_TRANSIENT` - Relative path from `TARGET_ROOT` in which to store temporary uploads.
-* `TARGET_LOCATION_STANDING` - Relative path from `TARGET_ROOT` in which to store permanent uploads.
-* `USERNAME` - User with SSH access and write permissions to `TARGET_ROOT`/`TARGET_LOCATION`.
-* `IDENTITY` - Location of SSH private key on local machine.
-
-The basic use case just requires a filename as the first parameter, see the `--help` option for more information. If you installed the Dolphin service you can just right click on a file an select the upload option, the link will be copied to your clipboard if pyperclip can find one.
+## Usage
+Use the command `zerve` plus a filename to upload it, see --help for more 
+information. KDE users can right click files and click the upload option, after
+the upload completes the link will be copied to the clipboard.
 
 ### Password protection
 Add a password to your private key if this is desired.

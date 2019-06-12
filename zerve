@@ -1,5 +1,18 @@
 #!/usr/bin/env python3
 
+# User with sufficient access to scp to target location
+USERNAME = "the_z"
+# SSH private key for the user, ideally a non-passworded one
+IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
+# Target server's domain name
+REMOTE_HOST = "files.th3-z.xyz"
+# Root of a HTTP server on target host
+TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
+# Path relative to root for temporary uploads
+TARGET_LOCATION_TRANSIENT = "transient/"
+# Path relative to root for permanent uploads
+TARGET_LOCATION_STANDING = "standing/"
+
 import sys
 import argparse
 
@@ -9,17 +22,8 @@ from os.path import isfile, exists, dirname, splitext, basename
 import hashlib
 import pyperclip
 
-USERNAME = "the_z"
-IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
-
-REMOTE_HOST = "files.th3-z.xyz"
-TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
-TARGET_LOCATION_TRANSIENT = "transient/"
-TARGET_LOCATION_STANDING = "standing/"
-
 SCP_FLAGS = "-Cq -i {}".format(IDENTITY)
 SSH_FLAGS = "-q -i {}".format(IDENTITY)
-
 
 def md5sum(filename):
     hashalg = hashlib.md5()
