@@ -23,9 +23,9 @@ Add this to your server's crontab to automate deletion. The `--standing` flag
 prevents deletion by this script.
 
 ## Usage
-Use the command `zerve` plus a filename to upload it, see --help for more 
-information. KDE users can right click files and click the upload option, after
-the upload completes the link will be copied to the clipboard.
+Use the command `zerve` plus a filename to upload it, see `zerve --help` for 
+more information. KDE users can right click files and click the upload option, 
+after the upload completes the link will be copied to the clipboard.
 
 ### Password protection
 Add a password to your private key if this is desired.
