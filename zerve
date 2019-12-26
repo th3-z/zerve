@@ -19,7 +19,11 @@ from os import system
 from os.path import isfile, exists, splitext, basename
 
 import hashlib
-import pyperclip
+try:
+    import pyperclip
+    pyperclip_installed = True
+except ImportError:
+    pyperclip_installed = False
 
 SCP_FLAGS = "-Cq -i {}".format(IDENTITY)
 SSH_FLAGS = "-q -i {}".format(IDENTITY)
@@ -96,11 +100,12 @@ def main():
     system(scp_command)
     print(link)
 
-    try:
-        pyperclip.copy(link)
-    except pyperclip.PyperclipException as e:
-        # No clipboard is available :(
-        pass
+    if pyperclip_installed:
+        try:
+            pyperclip.copy(link)
+        except pyperclip.PyperclipException as e:
+            # No clipboard is available :(
+            pass
 
 
 if __name__ == "__main__":
