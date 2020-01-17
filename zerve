@@ -1,29 +1,24 @@
 #!/usr/bin/env python3
 
-# User with sufficient access to scp to target location
-USERNAME = "the_z"
-# SSH private key for the user, ideally a non-passworded one
-IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
-# Target server's domain name
-REMOTE_HOST = "files.th3-z.xyz"
-# Root of a HTTP server on target host
-TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
-# Path relative to root for temporary uploads
-TARGET_LOCATION_TRANSIENT = "transient/"
-# Path relative to root for permanent uploads
-TARGET_LOCATION_STANDING = "standing/"
-
+import sys
 import argparse
+import requests
 
-from os import system
-from os.path import isfile, exists, splitext, basename
+import subprocess
+from os.path import isfile, exists, dirname, splitext, basename, abspath
 
 import hashlib
-try:
-    import pyperclip
-    pyperclip_installed = True
-except ImportError:
-    pyperclip_installed = False
+import pyperclip
+
+PUUSH_KEY = "YOURAPIKEY"
+
+USERNAME = "the_z"
+IDENTITY = "/home/the_z/.ssh/id_rsa_syn"
+
+REMOTE_HOST = "files.th3-z.xyz"
+TARGET_ROOT = "/srv/www/files-th3-z-xyz/"
+TARGET_LOCATION_TRANSIENT = "transient/"
+TARGET_LOCATION_STANDING = "standing/"
 
 SCP_FLAGS = "-Cq -i {}".format(IDENTITY)
 SSH_FLAGS = "-q -i {}".format(IDENTITY)
@@ -41,26 +36,18 @@ def md5sum(filename):
 
 def main():
     arg_parser = argparse.ArgumentParser()
-
-    arg_parser.add_argument(
-        "input_file",
-        help="Specify a file to upload"
-    )
-    arg_parser.add_argument(
-        "-p", "--preserve_name",
-        help="Preserve filename, overwrites existing files",
-        action="store_true"
-    )
-    arg_parser.add_argument(
-        "-v", "--verbose",
-        help="Increase output verbosity",
-        action="store_true"
-    )
-    arg_parser.add_argument(
-        "-s", "--standing",
-        help="Upload file to alternative, persistant, location",
-        action="store_true"
-    )
+    
+    arg_parser.add_argument("input_file", \
+        help="Specify a file to upload")
+    arg_parser.add_argument("-p", "--preserve_name", \
+        help="Preserve filename, overwrites existing files", \
+        action="store_true")
+    arg_parser.add_argument("-v", "--verbose", \
+        help="Increase output verbosity", \
+        action="store_true")
+    arg_parser.add_argument("-s", "--standing", \
+        help="Upload file to alternative, persistant, location", \
+        action="store_true")
 
     args = arg_parser.parse_args()
     verbose = args.verbose
@@ -84,28 +71,20 @@ def main():
     else:
         file_remote = md5sum(file_path) + file_ext
 
-    scp_command = "scp {} \"{}\" {}@{}:{}".format(
-        SCP_FLAGS,
-        file_path,
-        USERNAME,
-        REMOTE_HOST,
-        target_path+file_remote
+    # file_path = abspath(file_path)
+    
+    curl_command = 'curl "https://puush.me/api/up" -# -F "k={}" -F "z=waifu" -F "f=@{}"'.format(
+        PUUSH_KEY, file_path
     )
-
-    link = "https://{}/{}{}".format(REMOTE_HOST, target_location, file_remote)
-
     if verbose:
-        print(scp_command)
+        print(curl_command)
 
-    system(scp_command)
+    link = subprocess.check_output(curl_command, shell=True).decode("utf-8").split(",")[1]
+
+    
+    
     print(link)
-
-    if pyperclip_installed:
-        try:
-            pyperclip.copy(link)
-        except pyperclip.PyperclipException as e:
-            # No clipboard is available :(
-            pass
+    pyperclip.copy(link)
 
 
 if __name__ == "__main__":
